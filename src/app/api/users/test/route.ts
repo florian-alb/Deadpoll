@@ -3,20 +3,31 @@ import { collections } from "@/app/utils/collections";
 import clientPromise, { dbName } from "@/lib/mongodb";
 
 export async function GET(req: Request) {
-  const client = await clientPromise;
-  const db = client.db(dbName);
-  const users = db.collection(collections.users);
+  try {
+    const client = await clientPromise;
+    const db = client.db(dbName);
+    const users = db.collection(collections.users);
 
-  console.log(db);
+    const testUser: User = {
+      email: "test@email.com",
+      fullname: "test",
+    };
 
-  const testUser: User = {
-    email: "test@email.com",
-    fullname: "test",
-  };
+    const existingUser = await users.findOne({ email: testUser.email });
 
-  const result = users.insertOne(testUser);
+    if (existingUser) throw new Error("user allready exitst");
 
-  return new Response(JSON.stringify(result), {
-    status: 200,
-  });
+    const result = users.insertOne(testUser);
+
+    return new Response(JSON.stringify(result), {
+      status: 200,
+    });
+  } catch (error: any) {
+    return new Response(
+      JSON.stringify({
+        message: error.message ?? "failed to create a new user",
+        error,
+      })
+    );
+  }
 }

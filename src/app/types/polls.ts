@@ -11,7 +11,7 @@ export type Question = {
   _id?: ObjectId;
   title: string;
   type: QuestionType;
-  possibleAnswers: string[] | string;
+  possibleAnswers: string[] | string | null;
 };
 
 enum QuestionType {

@@ -30,12 +30,8 @@ const data = {
           url: "#",
         },
         {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
+          title: "Create",
+          url: "/poll/new",
         },
       ],
     },

@@ -1,20 +1,18 @@
-import { ObjectId } from "mongodb";
-
 export type Poll = {
-  _id?: ObjectId;
+  id?: string;
   name: string;
-  creator: ObjectId;
+  creator: string;
   questions: Question[];
 };
 
 export type Question = {
-  _id?: ObjectId;
+  id?: string;
   title: string;
   type: QuestionType;
-  possibleAnswers: string[] | string | null;
+  possibleAnswers: string[];
 };
 
-enum QuestionType {
+export enum QuestionType {
   QCM = "QCM",
   Open = "Open",
 }

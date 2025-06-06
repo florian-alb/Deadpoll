@@ -7,9 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { PollItem } from "@/components/poll/poll-item";
-import { Plus } from "lucide-react";
+import { Loader2Icon, Plus } from "lucide-react";
 import { Poll, Question, QuestionType } from "@/app/types/polls";
 import { generateId } from "@/lib/utils";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface ValidationErrors {
   name?: string;
@@ -22,10 +24,12 @@ interface ValidationErrors {
 }
 
 export function CreatePollWizard() {
+  const router = useRouter();
   const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(false);
   const [poll, setPoll] = useState<Poll>({
     name: "",
-    creator: session?.user?.id || "",
+    creator: session?.user?.id ?? "",
     questions: [],
   });
   const [errors, setErrors] = useState<ValidationErrors>({
@@ -191,10 +195,37 @@ export function CreatePollWizard() {
     }));
   }
 
-  function savePoll() {
+  async function savePoll() {
     if (validatePoll()) {
-      // TODO: Sauvegarder le sondage
-      console.log("Sondage valide, prêt à être sauvegardé:", poll);
+      try {
+        setLoading(true);
+        const res = await fetch("/api/poll", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: poll.name,
+            creator: session?.user?.id,
+            questions: poll.questions,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          toast.error(`Erreur: ${data.error || "Échec de l'envoi"}`);
+          return;
+        }
+
+        toast.success("Formulaire créé !");
+        router.push("/dashboard");
+      } catch (err) {
+        console.error(err);
+        toast.error(`Une erreur est survenue ${err}`);
+      } finally {
+        setLoading(false);
+      }
     }
   }
 
@@ -254,7 +285,14 @@ export function CreatePollWizard() {
 
             <div className="flex justify-end space-x-2">
               <Button variant="outline">Annuler</Button>
-              <Button onClick={savePoll}>Créer le sondage</Button>
+              {loading ? (
+                <Button disabled>
+                  <Loader2Icon className="animate-spin" />
+                  Enregistrement
+                </Button>
+              ) : (
+                <Button onClick={savePoll}>Créer le sondage</Button>
+              )}
             </div>
           </div>
         </CardContent>

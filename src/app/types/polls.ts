@@ -1,7 +1,9 @@
+import { ObjectId } from "mongodb";
+
 export type Poll = {
   id?: string;
   name: string;
-  creator: string;
+  creator: string | ObjectId;
   questions: Question[];
 };
 

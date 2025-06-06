@@ -7,7 +7,7 @@ const GithubSignIn = () => {
     <form
       action={async () => {
         "use server";
-        await signIn("github");
+        await signIn("github", { callbackUrl: "/dashboard" });
       }}
     >
       <Button className="w-full" variant="outline">

@@ -20,13 +20,13 @@ import {
 const data = {
   navMain: [
     {
-      title: "Playground",
+      title: "Polls",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "History",
+          title: "Polls",
           url: "#",
         },
         {

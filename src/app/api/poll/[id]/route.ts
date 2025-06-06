@@ -54,7 +54,7 @@ export async function PUT(
 
     const poll = await db
       .collection(collections.polls)
-      .findOne({ _id: new ObjectId(id) });
+      .findOne<Poll>({ _id: new ObjectId(id) });
 
     if (!poll) throw new ApiError("Poll not found", 404);
 
@@ -64,15 +64,16 @@ export async function PUT(
       questions: questions
         ? questions.map((question: Question) => ({
             ...question,
-            _id: question._id ?? new ObjectId(),
+            _id: question.id ?? new ObjectId(),
           }))
         : poll.questions,
       creator: poll.creator,
+      modified_at: new Date(),
     };
 
     const result = await db
       .collection(collections.polls)
-      .updateOne({ _id: updatedPoll._id }, { $set: updatedPoll });
+      .updateOne({ id: updatedPoll.id }, { $set: updatedPoll });
 
     return new Response(JSON.stringify(result), {
       status: 200,

@@ -1,10 +1,12 @@
 import { ObjectId } from "mongodb";
 
 export type Poll = {
-  id?: string;
+  id?: string | ObjectId;
   name: string;
   creator: string | ObjectId;
   questions: Question[];
+  created_at: Date;
+  modified_at?: Date;
 };
 
 export type Question = {

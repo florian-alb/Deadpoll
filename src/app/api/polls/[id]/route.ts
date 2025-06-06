@@ -3,7 +3,7 @@ import clientPromise, { dbName } from "@/lib/mongodb";
 import { collections } from "@/app/utils/collections";
 import { NextRequest } from "next/server";
 import { Poll, Question } from "@/app/types/polls";
-import { ApiError } from "@/lib/apiError";
+import { ApiError } from "@/lib/api-error";
 
 export async function GET(
   req: NextRequest,

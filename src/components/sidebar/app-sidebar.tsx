@@ -31,7 +31,7 @@ const data = {
         },
         {
           title: "Create",
-          url: "/poll/new",
+          url: "/dashboard/poll/new",
         },
       ],
     },

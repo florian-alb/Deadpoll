@@ -1,5 +1,5 @@
 import { Poll, Question } from "@/app/types/polls";
-import { collections } from "@/app/utils/collections";
+import { collections } from "@/lib/collections";
 import { ApiError } from "@/lib/api-error";
 import clientPromise, { dbName } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";

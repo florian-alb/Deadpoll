@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import clientPromise, { dbName } from "@/lib/mongodb";
-import { collections } from "@/app/utils/collections";
+import { collections } from "@/lib/collections";
 import { NextRequest } from "next/server";
 import { Poll, Question } from "@/app/types/polls";
 import { ApiError } from "@/lib/api-error";

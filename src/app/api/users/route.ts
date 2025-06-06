@@ -1,5 +1,5 @@
 import { User } from "@/app/types/users";
-import { collections } from "@/app/utils/collections";
+import { collections } from "@/lib/collections";
 import { ApiError } from "@/lib/api-error";
 import clientPromise, { dbName } from "@/lib/mongodb";
 
@@ -28,9 +28,9 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const { email, fullname } = await req.json();
+    const { email, name } = await req.json();
 
-    if (!email || !fullname)
+    if (!email || !name)
       throw new ApiError("Email and/or Fullname are required", 400);
 
     const client = await clientPromise;
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
 
     const newUser = {
       email: email,
-      fullname: fullname,
+      name: name,
     };
 
     const result = db.collection(collections.users).insertOne(newUser);

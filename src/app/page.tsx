@@ -1,13 +1,25 @@
-import { LogoutButton } from "@/components/auth-buttons";
 import { auth } from "@/app/auth";
-import { GithubSignIn } from "@/components/github-sign-in";
+import { LogoutButton } from "@/components/auth-buttons";
+import { Button } from "@/components/ui/button";
+import { LogIn } from "lucide-react";
+import Link from "next/link";
 
-import { redirect } from "next/navigation";
-
-export default async function Home() {
+export default async function Page() {
   const session = await auth();
 
-  if (!session) redirect("/sign-in");
-
-  return <div>{!session?.user ? <GithubSignIn /> : <LogoutButton />}</div>;
+  return (
+    <div>
+      {session?.user ? (
+        <LogoutButton />
+      ) : (
+        <Link href="./sign-in">
+          <Button>
+            <LogIn />
+            Sign In
+          </Button>
+        </Link>
+      )}
+      <p>salut</p>
+    </div>
+  );
 }

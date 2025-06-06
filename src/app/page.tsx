@@ -1,8 +1,13 @@
-import { LoginButton, LogoutButton } from "@/components/auth-buttons";
+import { LogoutButton } from "@/components/auth-buttons";
 import { auth } from "@/app/auth";
+import { GithubSignIn } from "@/components/github-sign-in";
+
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await auth();
 
-  return <div>{session?.user ? <LoginButton /> : <LogoutButton />}</div>;
+  if (!session) redirect("/sign-in");
+
+  return <div>{!session?.user ? <GithubSignIn /> : <LogoutButton />}</div>;
 }

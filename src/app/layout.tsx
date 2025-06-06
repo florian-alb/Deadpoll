@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Deadpool",
-  description: "Juse la meilleure application de sondage...",
+  title: "Deadpoll",
+  description: "Juse la meilleure application de sondage..",
 };
 
 export default function RootLayout({

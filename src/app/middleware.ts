@@ -6,8 +6,7 @@ export async function middleware(req: NextRequest) {
   const session = await auth();
   const isProtected =
     req.nextUrl.pathname.startsWith("/dashboard") ||
-    req.nextUrl.pathname.startsWith("/profile") ||
-    req.nextUrl.pathname.startsWith("/settings");
+    req.nextUrl.pathname.startsWith("/poll/new");
 
   if (!session && isProtected) {
     return NextResponse.redirect(new URL("/sign-in", req.url));

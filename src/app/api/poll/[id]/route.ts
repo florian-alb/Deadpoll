@@ -4,6 +4,7 @@ import { collections } from "@/lib/collections";
 import { NextRequest } from "next/server";
 import { Poll, Question } from "@/app/types/polls";
 import { ApiError } from "@/lib/api-error";
+import { getAuthUser } from "@/lib/get-auth-user";
 
 export async function GET(
   req: NextRequest,
@@ -43,6 +44,9 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const user = await getAuthUser();
+    if (!user) throw new ApiError("Unauthorized", 401);
+
     const client = await clientPromise;
     const db = client.db(dbName);
 
@@ -58,22 +62,20 @@ export async function PUT(
 
     if (!poll) throw new ApiError("Poll not found", 404);
 
-    const updatedPoll: Poll = {
-      ...poll,
-      name: name ?? poll.name,
-      questions: questions
-        ? questions.map((question: Question) => ({
-            ...question,
-            _id: question.id ?? new ObjectId(),
-          }))
-        : poll.questions,
-      creator: poll.creator,
-      modified_at: new Date(),
+    const updatedPollSet = {
+      $set: {
+        name: name ?? poll.name,
+        questions: questions ?? poll.questions,
+        modified_at: new Date(),
+      },
     };
 
     const result = await db
       .collection(collections.polls)
-      .updateOne({ id: updatedPoll.id }, { $set: updatedPoll });
+      .updateOne({ _id: poll._id }, updatedPollSet);
+
+    if (result.modifiedCount === 0)
+      throw new ApiError("Failed to update poll", 500);
 
     return new Response(JSON.stringify(result), {
       status: 200,

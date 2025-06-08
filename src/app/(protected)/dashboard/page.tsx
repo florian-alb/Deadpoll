@@ -15,10 +15,12 @@ import {
 } from "@/components/ui/tooltip";
 import { formatDate } from "@/lib/utils";
 import { ChartPie, Edit, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
   const [polls, setPolls] = useState<Poll[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {
@@ -28,6 +30,10 @@ export default function DashboardPage() {
     }
     fetchData();
   }, []);
+
+  function editPoll(pollId: string) {
+    router.push(`/dashboard/poll/${pollId}/edit`);
+  }
 
   return (
     <div className="flex flex-wrap gap-4">
@@ -53,7 +59,12 @@ export default function DashboardPage() {
                 <div className="flex gap-4">
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button className="bg-indigo-500 hover:bg-indigo-500/50">
+                      <Button
+                        className="bg-indigo-500 hover:bg-indigo-500/50"
+                        onClick={() => {
+                          editPoll(poll._id as string);
+                        }}
+                      >
                         <Edit />
                       </Button>
                     </TooltipTrigger>

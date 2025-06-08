@@ -1,35 +1,37 @@
+"use client";
+
 import { EditPollWizard } from "@/components/poll/edit-poll-wizard";
+import { usePoll } from "@/components/poll/poll-context";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 
-interface EditPollPageProps {
-  params: {
-    id: string;
-  };
-}
+export default function EditPollPage() {
+  const poll = usePoll();
 
-export default async function EditPollPage({ params }: EditPollPageProps) {
-  const { id } = await params;
-
-  if (!id) {
-    notFound();
-  }
+  // if (status === "loading" || initialLoading) {
+  //   return (
+  //     <div className="flex items-center justify-center min-h-[400px]">
+  //       <Loader2Icon className="w-8 h-8 animate-spin" />
+  //     </div>
+  //   );
+  // }
 
   return (
-    <div>
-      <div className="mx-auto py-8">
-        <div className="flex justify-between align-center">
-          <h1 className="text-2xl font-bold mb-6">Modifier le sondage</h1>
-          <Link href={"/dashboard"}>
-            <Button variant="link" className="text-foreground">
-              <ArrowLeft /> Retour
-            </Button>
-          </Link>
+    poll && (
+      <div>
+        <div className="mx-auto py-8">
+          <div className="flex justify-between align-center">
+            <h1 className="text-2xl font-bold mb-6">Modifier le sondage</h1>
+            <Link href={"/dashboard"}>
+              <Button variant="link" className="text-foreground">
+                <ArrowLeft /> Retour
+              </Button>
+            </Link>
+          </div>
+          <EditPollWizard pollProps={poll} />
         </div>
-        <EditPollWizard pollId={id} />
       </div>
-    </div>
+    )
   );
 }

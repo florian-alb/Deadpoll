@@ -10,7 +10,8 @@ import { Loader2Icon, Plus } from "lucide-react";
 import { Poll, Question, QuestionType } from "@/app/types/polls";
 import { generateId } from "@/lib/utils";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
+import { usePoll } from "./poll-context";
 
 interface ValidationErrors {
   name?: string;
@@ -23,62 +24,19 @@ interface ValidationErrors {
 }
 
 interface EditPollWizardProps {
-  pollId: string;
+  pollProps: Poll;
 }
 
-export function EditPollWizard({ pollId }: EditPollWizardProps) {
+export function EditPollWizard({ pollProps }: EditPollWizardProps) {
   const router = useRouter();
-  const { data: session, status } = useSession();
+
   const [loading, setLoading] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
-  const [poll, setPoll] = useState<Poll>({
-    name: "",
-    creator: session?.user?.id ?? "",
-    questions: [],
-    created_at: new Date(),
-  });
+
+  const [poll, setPoll] = useState<Poll>(pollProps);
+
   const [errors, setErrors] = useState<ValidationErrors>({
     questions: {},
   });
-
-  useEffect(() => {
-    async function fetchPoll() {
-      try {
-        const res = await fetch(`/api/poll/${pollId}`);
-        if (!res.ok) {
-          throw new Error("Failed to fetch poll");
-        }
-        const data = await res.json();
-        setPoll(data);
-      } catch (err) {
-        console.error(err);
-        toast.error("Erreur lors du chargement du sondage");
-        router.push("/dashboard");
-      } finally {
-        setInitialLoading(false);
-      }
-    }
-
-    if (pollId) {
-      fetchPoll();
-    }
-  }, [pollId, router]);
-
-  if (status === "loading" || initialLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2Icon className="w-8 h-8 animate-spin" />
-      </div>
-    );
-  }
-
-  if (status === "unauthenticated") {
-    return (
-      <div className="text-center py-8">
-        <p>Vous devez être connecté pour modifier un sondage.</p>
-      </div>
-    );
-  }
 
   function validatePoll(): boolean {
     const newErrors: ValidationErrors = {
@@ -249,14 +207,14 @@ export function EditPollWizard({ pollId }: EditPollWizardProps) {
     if (validatePoll()) {
       try {
         setLoading(true);
-        const res = await fetch(`/api/poll/${pollId}`, {
+        const res = await fetch(`/api/poll/${poll._id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
             name: poll.name,
-            creator: session?.user?.id,
+            creator: pollProps.creator,
             questions: poll.questions,
           }),
         });

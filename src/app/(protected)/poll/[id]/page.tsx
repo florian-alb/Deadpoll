@@ -41,26 +41,26 @@ export default function AnswerPollPage() {
     );
   }
 
-  //   if (poll.creator === user._id) {
-  //     return (
-  //       <div className="container mx-auto py-8 flex justify-center items-center h-screen">
-  //         <div className="text-center">
-  //           <h1 className="text-2xl font-bold mb-4">
-  //             Vous êtes le créateur de ce Poll
-  //           </h1>
-  //           <p className="text-sm mb-4">
-  //             Vous ne pouvez pas répondre à votre propre Poll
-  //           </p>
-  //           <Link href="/dashboard">
-  //             <Button>
-  //               <ArrowLeft className="w-4 h-4 mr-2" />
-  //               Retour au tableau de bord
-  //             </Button>
-  //           </Link>
-  //         </div>
-  //       </div>
-  //     );
-  //   }
+  if (poll.creator === user._id) {
+    return (
+      <div className="container mx-auto py-8 flex justify-center items-center h-screen">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">
+            Vous êtes le créateur de ce Poll
+          </h1>
+          <p className="text-sm mb-4">
+            Vous ne pouvez pas répondre à votre propre Poll
+          </p>
+          <Link href="/dashboard">
+            <Button>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Retour au tableau de bord
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto py-8">

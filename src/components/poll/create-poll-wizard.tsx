@@ -71,7 +71,7 @@ export function CreatePollWizard() {
       }
 
       if (Object.keys(questionErrors).length > 0) {
-        newErrors.questions[question.id!] = questionErrors;
+        newErrors.questions[question._id.toString()] = questionErrors;
       }
     });
 
@@ -84,7 +84,7 @@ export function CreatePollWizard() {
 
   function addQuestion() {
     const newQuestion: Question = {
-      id: generateId(),
+      _id: generateId(),
       title: "",
       type: QuestionType.Open,
       possibleAnswers: [],
@@ -98,7 +98,7 @@ export function CreatePollWizard() {
   function removeQuestion(questionId: string) {
     setPoll((prev) => ({
       ...prev,
-      questions: prev.questions.filter((q) => q.id !== questionId),
+      questions: prev.questions.filter((q) => q._id !== questionId),
     }));
 
     setErrors((prev) => {
@@ -116,7 +116,7 @@ export function CreatePollWizard() {
     setPoll((prev) => ({
       ...prev,
       questions: prev.questions.map((q) =>
-        q.id === questionId ? { ...q, [field]: value } : q
+        q._id === questionId ? { ...q, [field]: value } : q
       ),
     }));
 
@@ -141,7 +141,7 @@ export function CreatePollWizard() {
     setPoll((prev) => ({
       ...prev,
       questions: prev.questions.map((q) =>
-        q.id === questionId
+        q._id === questionId
           ? { ...q, possibleAnswers: [...(q.possibleAnswers || []), ""] }
           : q
       ),
@@ -156,7 +156,7 @@ export function CreatePollWizard() {
     setPoll((prev) => ({
       ...prev,
       questions: prev.questions.map((q) =>
-        q.id === questionId
+        q._id === questionId
           ? {
               ...q,
               possibleAnswers: q.possibleAnswers.map((r, i) =>
@@ -183,7 +183,7 @@ export function CreatePollWizard() {
     setPoll((prev) => ({
       ...prev,
       questions: prev.questions.map((q) =>
-        q.id === questionId
+        q._id === questionId
           ? {
               ...q,
               possibleAnswers: q.possibleAnswers.filter(
@@ -270,7 +270,7 @@ export function CreatePollWizard() {
 
               {poll.questions.map((question, index) => (
                 <PollItem
-                  key={question.id}
+                  key={question._id.toString()}
                   question={question}
                   index={index}
                   updateQuestion={updateQuestion}
@@ -278,7 +278,7 @@ export function CreatePollWizard() {
                   addPossibleAnswer={addPossibleAnswer}
                   updatePossibleAnswer={updatePossibleAnswer}
                   removePossibleAnswer={removePossibleAnswer}
-                  errors={errors.questions[question.id!]}
+                  errors={errors.questions[question._id.toString()]}
                 />
               ))}
             </div>

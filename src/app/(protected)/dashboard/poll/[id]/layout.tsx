@@ -1,4 +1,4 @@
-import { PollContextProvider } from "@/components/poll/poll-context";
+import { PollContextProvider } from "@/app/context/poll-context";
 import { getPollById } from "@/lib/server/polls";
 import { serializePoll } from "@/lib/utils";
 import { notFound } from "next/navigation";

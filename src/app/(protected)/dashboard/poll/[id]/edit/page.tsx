@@ -1,21 +1,13 @@
 "use client";
 
 import { EditPollWizard } from "@/components/poll/edit-poll-wizard";
-import { usePoll } from "@/components/poll/poll-context";
+import { usePoll } from "@/app/context/poll-context";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export default function EditPollPage() {
   const poll = usePoll();
-
-  // if (status === "loading" || initialLoading) {
-  //   return (
-  //     <div className="flex items-center justify-center min-h-[400px]">
-  //       <Loader2Icon className="w-8 h-8 animate-spin" />
-  //     </div>
-  //   );
-  // }
 
   return (
     poll && (

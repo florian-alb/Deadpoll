@@ -37,7 +37,7 @@ export function serializePoll(poll: any) {
   };
 }
 
-export function serelizeUser(user: any) {
+export function serializeUser(user: any) {
   return {
     ...user,
     _id: user._id?.toString(),

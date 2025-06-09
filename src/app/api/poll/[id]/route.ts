@@ -4,7 +4,7 @@ import { collections } from "@/lib/collections";
 import { NextRequest } from "next/server";
 import { Poll, Question } from "@/app/types/polls";
 import { ApiError } from "@/lib/api-error";
-import { getAuthUser } from "@/lib/get-auth-user";
+import { getAuthUser } from "@/lib/server/get-auth-user";
 
 export async function GET(
   req: NextRequest,
@@ -62,17 +62,26 @@ export async function PUT(
 
     if (!poll) throw new ApiError("Poll not found", 404);
 
+    const questionsWithId: Question[] = questions.map((question: Question) => {
+      return {
+        ...question,
+        _id: ObjectId.isValid(question._id)
+          ? new ObjectId(question._id)
+          : new ObjectId(),
+      };
+    });
+
     const updatedPollSet = {
       $set: {
         name: name ?? poll.name,
-        questions: questions ?? poll.questions,
+        questions: questionsWithId ?? poll.questions,
         modified_at: new Date(),
       },
     };
 
     const result = await db
       .collection(collections.polls)
-      .updateOne({ _id: poll._id }, updatedPollSet);
+      .updateOne({ _id: new ObjectId(id) }, updatedPollSet);
 
     if (result.modifiedCount === 0)
       throw new ApiError("Failed to update poll", 500);

@@ -3,7 +3,7 @@ import { collections } from "@/lib/collections";
 import { ApiError } from "@/lib/api-error";
 import clientPromise, { dbName } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
-import { getAuthUser } from "@/lib/get-auth-user";
+import { getAuthUser } from "@/lib/server/get-auth-user";
 
 export async function GET(req: Request) {
   try {
@@ -61,7 +61,9 @@ export async function POST(req: Request) {
       created_at: new Date(),
     };
 
-    const result = await db.collection(collections.polls).insertOne(newPoll);
+    const result = await db
+      .collection<Poll>(collections.polls)
+      .insertOne(newPoll);
 
     return new Response(JSON.stringify(result), {
       status: 201,

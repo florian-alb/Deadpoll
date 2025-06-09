@@ -59,7 +59,11 @@ export function PollItem({
               <Input
                 value={question.title}
                 onChange={(e) =>
-                  updateQuestion(question.id!, "title", e.target.value)
+                  updateQuestion(
+                    question._id.toString(),
+                    "title",
+                    e.target.value
+                  )
                 }
                 placeholder="Entrez votre question"
                 className={errors?.title ? "border-red-500" : ""}
@@ -74,7 +78,7 @@ export function PollItem({
               <Select
                 value={question.type}
                 onValueChange={(value: QuestionType) =>
-                  updateQuestion(question.id!, "type", value)
+                  updateQuestion(question._id.toString(), "type", value)
                 }
               >
                 <SelectTrigger>
@@ -103,7 +107,7 @@ export function PollItem({
                       value={response}
                       onChange={(e) =>
                         updatePossibleAnswer(
-                          question.id!,
+                          question._id.toString(),
                           responseIndex,
                           e.target.value
                         )
@@ -117,7 +121,10 @@ export function PollItem({
                       variant="destructive"
                       size="icon"
                       onClick={() =>
-                        removePossibleAnswer(question.id!, responseIndex)
+                        removePossibleAnswer(
+                          question._id.toString(),
+                          responseIndex
+                        )
                       }
                     >
                       <Trash2 className="w-4 h-4" />
@@ -127,7 +134,7 @@ export function PollItem({
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => addPossibleAnswer(question.id!)}
+                  onClick={() => addPossibleAnswer(question._id.toString())}
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Ajouter une option
@@ -138,7 +145,7 @@ export function PollItem({
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => removeQuestion(question.id!)}
+            onClick={() => removeQuestion(question._id.toString())}
             className="ml-2"
           >
             <Trash2 className="w-4 h-4" />

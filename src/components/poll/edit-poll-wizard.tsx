@@ -11,7 +11,7 @@ import { Poll, Question, QuestionType } from "@/app/types/polls";
 import { generateId } from "@/lib/utils";
 import { toast } from "sonner";
 import { notFound, useRouter } from "next/navigation";
-import { usePoll } from "./poll-context";
+import { usePoll } from "../../app/context/poll-context";
 
 interface ValidationErrors {
   name?: string;
@@ -65,7 +65,7 @@ export function EditPollWizard({ pollProps }: EditPollWizardProps) {
       }
 
       if (Object.keys(questionErrors).length > 0) {
-        newErrors.questions[question.id!] = questionErrors;
+        newErrors.questions[question._id.toString()] = questionErrors;
       }
     });
 
@@ -78,7 +78,7 @@ export function EditPollWizard({ pollProps }: EditPollWizardProps) {
 
   function addQuestion() {
     const newQuestion: Question = {
-      id: generateId(),
+      _id: generateId(),
       title: "",
       type: QuestionType.Open,
       possibleAnswers: [],
@@ -93,7 +93,7 @@ export function EditPollWizard({ pollProps }: EditPollWizardProps) {
   function removeQuestion(questionId: string) {
     setPoll((prev) => ({
       ...prev,
-      questions: prev.questions.filter((q) => q.id !== questionId),
+      questions: prev.questions.filter((q) => q._id !== questionId),
     }));
 
     setErrors((prev) => {
@@ -111,7 +111,7 @@ export function EditPollWizard({ pollProps }: EditPollWizardProps) {
     setPoll((prev) => ({
       ...prev,
       questions: prev.questions.map((q) =>
-        q.id === questionId ? { ...q, [field]: value } : q
+        q._id === questionId ? { ...q, [field]: value } : q
       ),
     }));
 
@@ -136,7 +136,7 @@ export function EditPollWizard({ pollProps }: EditPollWizardProps) {
     setPoll((prev) => ({
       ...prev,
       questions: prev.questions.map((q) =>
-        q.id === questionId
+        q._id === questionId
           ? {
               ...q,
               possibleAnswers: [...(q.possibleAnswers || []), ""],
@@ -154,7 +154,7 @@ export function EditPollWizard({ pollProps }: EditPollWizardProps) {
     setPoll((prev) => ({
       ...prev,
       questions: prev.questions.map((q) =>
-        q.id === questionId
+        q._id === questionId
           ? {
               ...q,
               possibleAnswers: q.possibleAnswers?.map((r, i) =>
@@ -170,7 +170,7 @@ export function EditPollWizard({ pollProps }: EditPollWizardProps) {
       if (newErrors.questions[questionId]) {
         const questionErrors = newErrors.questions[questionId];
         if (questionErrors.possibleAnswers) {
-          const question = poll.questions.find((q) => q.id === questionId);
+          const question = poll.questions.find((q) => q._id === questionId);
           if (
             question?.possibleAnswers &&
             question.possibleAnswers.length >= 2 &&
@@ -191,7 +191,7 @@ export function EditPollWizard({ pollProps }: EditPollWizardProps) {
     setPoll((prev) => ({
       ...prev,
       questions: prev.questions.map((q) =>
-        q.id === questionId
+        q._id === questionId
           ? {
               ...q,
               possibleAnswers: q.possibleAnswers?.filter(
@@ -256,7 +256,7 @@ export function EditPollWizard({ pollProps }: EditPollWizardProps) {
         <div className="space-y-4">
           {poll.questions.map((question, index) => (
             <PollItem
-              key={question.id}
+              key={question._id.toString()}
               question={question}
               index={index}
               updateQuestion={updateQuestion}
@@ -264,7 +264,7 @@ export function EditPollWizard({ pollProps }: EditPollWizardProps) {
               addPossibleAnswer={addPossibleAnswer}
               updatePossibleAnswer={updatePossibleAnswer}
               removePossibleAnswer={removePossibleAnswer}
-              errors={errors.questions[question.id!]}
+              errors={errors.questions[question._id.toString()]}
             />
           ))}
 

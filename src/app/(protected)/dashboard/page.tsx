@@ -4,6 +4,7 @@ import { Poll } from "@/app/types/polls";
 import { PollCard } from "@/components/poll/poll-card";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function DashboardPage() {
   const [polls, setPolls] = useState<Poll[]>([]);
@@ -22,6 +23,17 @@ export default function DashboardPage() {
     router.push(`/dashboard/poll/${pollId}/edit`);
   }
 
+  async function sharePoll(pollId: string) {
+    try {
+      await navigator.clipboard.writeText(
+        `${window.location.origin}/poll/${pollId}`
+      );
+      toast.info("Lien du Poll copié");
+    } catch (err) {
+      toast.error("Erreur lors de la copie du lien");
+    }
+  }
+
   return (
     <div className="flex flex-wrap gap-4">
       {polls &&
@@ -30,6 +42,7 @@ export default function DashboardPage() {
             <PollCard
               poll={poll}
               editPoll={editPoll}
+              sharePoll={sharePoll}
               key={String(poll._id) ?? index}
             />
           );

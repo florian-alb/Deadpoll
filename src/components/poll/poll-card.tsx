@@ -4,7 +4,7 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
-import { Edit, ChartPie, Trash } from "lucide-react";
+import { Edit, ChartPie, Trash, Share } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,9 +17,10 @@ import { Poll } from "@/app/types/polls";
 interface CardPollProps {
   poll: Poll;
   editPoll: (pollId: string) => void;
+  sharePoll: (pollId: string) => void;
 }
 
-export function PollCard({ poll, editPoll }: CardPollProps) {
+export function PollCard({ poll, editPoll, sharePoll }: CardPollProps) {
   return (
     <Card>
       <CardHeader>
@@ -37,7 +38,23 @@ export function PollCard({ poll, editPoll }: CardPollProps) {
         </div>
       </CardContent>
       <CardFooter>
-        <div className="flex gap-4">
+        <div className="flex gap-4 justify-center  w-full">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                className="bg-cyan-500 hover:bg-cyan-500/50"
+                onClick={() => {
+                  sharePoll(poll._id as string);
+                }}
+              >
+                <Share />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Partager</p>
+            </TooltipContent>
+          </Tooltip>
+
           <Tooltip>
             <TooltipTrigger asChild>
               <Button

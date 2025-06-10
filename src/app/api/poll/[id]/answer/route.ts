@@ -1,4 +1,8 @@
-import { Answer, QuestionAnswer } from "@/app/types/answers";
+import {
+  Answer,
+  AnswerWithUserEmail,
+  QuestionAnswer,
+} from "@/app/types/answers";
 import { ApiError } from "@/lib/api-error";
 import { collections } from "@/lib/collections";
 import clientPromise, { dbName } from "@/lib/mongodb";
@@ -11,18 +15,48 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const user = getAuthUser();
+    if (!user) throw new ApiError("Unauthorized", 401);
+
     const id = (await params).id;
+
     if (!ObjectId.isValid(id)) throw new ApiError("Invalid poll ID", 400);
 
     const client = await clientPromise;
     const db = client.db(dbName);
 
-    const allPolls = await db
+    const answers: AnswerWithUserEmail[] = await db
       .collection(collections.answers)
-      .find({ pollId: id })
+      .aggregate<AnswerWithUserEmail>([
+        { $match: { pollId: new ObjectId(id) } },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "userInfo",
+          },
+        },
+        {
+          $unwind: {
+            path: "$userInfo",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            pollId: 1,
+            userId: 1,
+            createdAt: 1,
+            answers: 1,
+            userEmail: "$userInfo.email",
+          },
+        },
+      ])
       .toArray();
 
-    return new Response(JSON.stringify(allPolls), {
+    return new Response(JSON.stringify(answers), {
       status: 200,
     });
   } catch (error) {
@@ -73,10 +107,11 @@ export async function POST(
       pollId: new ObjectId(id),
       userId: new ObjectId(user._id),
       answers: questionAnswers,
+      createdAt: new Date(),
     };
 
     const result = await db
-      .collection(collections.answers)
+      .collection<Answer>(collections.answers)
       .insertOne(pollAnswer);
 
     return new Response(JSON.stringify(result), {

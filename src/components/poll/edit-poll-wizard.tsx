@@ -44,7 +44,7 @@ export function EditPollWizard({ pollProps }: EditPollWizardProps) {
     };
 
     if (!poll.name.trim()) {
-      newErrors.name = "Le nom du sondage est requis";
+      newErrors.name = "Le nom du Poll est requis";
     }
 
     poll.questions.forEach((question) => {
@@ -241,13 +241,13 @@ export function EditPollWizard({ pollProps }: EditPollWizardProps) {
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label>Nom du sondage</Label>
+          <Label>Nom du Poll</Label>
           <Input
             value={poll.name}
             onChange={(e) =>
               setPoll((prev) => ({ ...prev, name: e.target.value }))
             }
-            placeholder="Entrez le nom du sondage"
+            placeholder="Entrez le nom du Poll"
             className={errors.name ? "border-red-500" : ""}
           />
           {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
@@ -284,7 +284,7 @@ export function EditPollWizard({ pollProps }: EditPollWizardProps) {
               Modification
             </Button>
           ) : (
-            <Button onClick={updatePoll}>Modifier le sondage</Button>
+            <Button onClick={updatePoll}>Modifier le Poll</Button>
           )}
         </div>
       </div>

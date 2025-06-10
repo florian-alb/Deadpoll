@@ -60,6 +60,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return `${baseUrl}/dashboard`;
     },
   },
+  events: {
+    async signIn({ user }) {
+      const clientMongo = await clientPromise;
+      const db = clientMongo.db(dbName);
+
+      const existing = await db
+        .collection(collections.users)
+        .findOne({ email: user.email });
+
+      if (!existing) {
+        await db.collection(collections.users).insertOne({
+          email: user.email,
+          name: user.name ?? "",
+          avatar: user.image,
+          createdAt: new Date(),
+        });
+      }
+    },
+  },
   session: {
     strategy: "jwt",
   },

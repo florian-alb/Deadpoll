@@ -11,18 +11,17 @@ export default function EditPollPage() {
 
   return (
     poll && (
-      <div>
-        <div className="mx-auto py-8">
-          <div className="flex justify-between align-center">
-            <h1 className="text-2xl font-bold mb-6">Modifier le sondage</h1>
-            <Link href={"/dashboard"}>
-              <Button variant="link" className="text-foreground">
-                <ArrowLeft /> Retour
-              </Button>
-            </Link>
-          </div>
-          <EditPollWizard pollProps={poll} />
+      <div className="mx-auto">
+        <div className="flex justify-between align-center">
+          <h1 className="text-2xl font-bold mb-6">Modifier le Poll</h1>
+          <Link href="/dashboard">
+            <Button variant="outline">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Retour
+            </Button>
+          </Link>
         </div>
+        <EditPollWizard pollProps={poll} />
       </div>
     )
   );

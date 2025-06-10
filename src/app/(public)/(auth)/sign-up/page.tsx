@@ -8,17 +8,16 @@ import {
 import { GalleryVerticalEnd } from "lucide-react";
 import { GithubSignIn } from "@/components/github-sign-in";
 import SignUpForm from "./sign-up-form";
+import LogoDeadpoll from "@/components/icons/logo-deadpoll";
 
 export default function SignUpPage() {
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
-        <a href="#" className="flex items-center gap-2 self-center font-medium">
-          <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-            <GalleryVerticalEnd className="size-4" />
-          </div>
-          DeadPoll
-        </a>
+        <div className="flex items-center gap-2 self-center font-medium">
+          <LogoDeadpoll className="size-12" />
+          <span className="text-2xl">DeadPoll</span>
+        </div>
         <div className="flex flex-col gap-6">
           <Card>
             <CardHeader className="text-center">

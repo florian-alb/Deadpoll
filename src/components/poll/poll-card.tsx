@@ -4,7 +4,7 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
-import { Edit, ChartPie, Trash, Share } from "lucide-react";
+import { Edit, ChartPie, Trash, Copy, icons } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,9 +18,15 @@ interface CardPollProps {
   poll: Poll;
   editPoll: (pollId: string) => void;
   sharePoll: (pollId: string) => void;
+  showPollStats: (pollId: string) => void;
 }
 
-export function PollCard({ poll, editPoll, sharePoll }: CardPollProps) {
+export function PollCard({
+  poll,
+  editPoll,
+  sharePoll,
+  showPollStats,
+}: CardPollProps) {
   return (
     <Card>
       <CardHeader>
@@ -42,23 +48,27 @@ export function PollCard({ poll, editPoll, sharePoll }: CardPollProps) {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                className="bg-cyan-500 hover:bg-cyan-500/50"
+                variant="outline"
+                size="icon"
+                className="text-red-500 hover:bg-red-500 hover:text-white size-8"
                 onClick={() => {
                   sharePoll(poll._id as string);
                 }}
               >
-                <Share />
+                <Copy />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Partager</p>
+              <p>Copier le lien</p>
             </TooltipContent>
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                className="bg-indigo-500 hover:bg-indigo-500/50"
+                variant="outline"
+                size="icon"
+                className="text-red-500 hover:bg-red-500 hover:text-white size-8"
                 onClick={() => {
                   editPoll(poll._id as string);
                 }}
@@ -73,7 +83,14 @@ export function PollCard({ poll, editPoll, sharePoll }: CardPollProps) {
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button className="bg-emerald-500 hover:bg-emerald-500/50">
+              <Button
+                variant="outline"
+                size="icon"
+                className="text-red-500 hover:bg-red-500 hover:text-white size-8"
+                onClick={() => {
+                  showPollStats(poll._id as string);
+                }}
+              >
                 <ChartPie />
               </Button>
             </TooltipTrigger>
@@ -84,7 +101,11 @@ export function PollCard({ poll, editPoll, sharePoll }: CardPollProps) {
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button className="bg-red-500 hover:bg-red-500/50">
+              <Button
+                variant="outline"
+                size="icon"
+                className="text-red-500 hover:bg-red-500 hover:text-white size-8"
+              >
                 <Trash />
               </Button>
             </TooltipTrigger>

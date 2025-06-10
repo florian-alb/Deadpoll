@@ -23,6 +23,10 @@ export default function DashboardPage() {
     router.push(`/dashboard/poll/${pollId}/edit`);
   }
 
+  function showPollStats(pollId: string) {
+    router.push(`/dashboard/poll/${pollId}/responses`);
+  }
+
   async function sharePoll(pollId: string) {
     try {
       await navigator.clipboard.writeText(
@@ -43,6 +47,7 @@ export default function DashboardPage() {
               poll={poll}
               editPoll={editPoll}
               sharePoll={sharePoll}
+              showPollStats={showPollStats}
               key={String(poll._id) ?? index}
             />
           );

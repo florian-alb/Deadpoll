@@ -39,14 +39,15 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const user = await getAuthUser();
+
     if (!user) throw new ApiError("Unauthorized", 401);
 
     const client = await clientPromise;
     const db = client.db(dbName);
 
-    const { name, questions, creator } = await req.json();
+    const { name, questions } = await req.json();
 
-    if (!name || !Array.isArray(questions) || !creator)
+    if (!name || !Array.isArray(questions))
       throw new ApiError("Missing required fields", 400);
 
     const questionsWithId = questions.map((question: Question) => ({

@@ -17,7 +17,7 @@ export default function AnswerPollPage() {
     return (
       <div className="container mx-auto py-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Sondage non trouvé</h1>
+          <h1 className="text-2xl font-bold mb-4">Poll non trouvé</h1>
           <Link href="/dashboard">
             <Button variant="outline">
               <ArrowLeft className="w-4 h-4 mr-2" />

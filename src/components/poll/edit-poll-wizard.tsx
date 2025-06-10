@@ -10,7 +10,8 @@ import { Loader2Icon, Plus } from "lucide-react";
 import { Poll, Question, QuestionType } from "@/app/types/polls";
 import { generateId } from "@/lib/utils";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
+import { usePoll } from "../../app/context/poll-context";
 
 interface ValidationErrors {
   name?: string;
@@ -23,62 +24,19 @@ interface ValidationErrors {
 }
 
 interface EditPollWizardProps {
-  pollId: string;
+  pollProps: Poll;
 }
 
-export function EditPollWizard({ pollId }: EditPollWizardProps) {
+export function EditPollWizard({ pollProps }: EditPollWizardProps) {
   const router = useRouter();
-  const { data: session, status } = useSession();
+
   const [loading, setLoading] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
-  const [poll, setPoll] = useState<Poll>({
-    name: "",
-    creator: session?.user?.id ?? "",
-    questions: [],
-    created_at: new Date(),
-  });
+
+  const [poll, setPoll] = useState<Poll>(pollProps);
+
   const [errors, setErrors] = useState<ValidationErrors>({
     questions: {},
   });
-
-  useEffect(() => {
-    async function fetchPoll() {
-      try {
-        const res = await fetch(`/api/poll/${pollId}`);
-        if (!res.ok) {
-          throw new Error("Failed to fetch poll");
-        }
-        const data = await res.json();
-        setPoll(data);
-      } catch (err) {
-        console.error(err);
-        toast.error("Erreur lors du chargement du sondage");
-        router.push("/dashboard");
-      } finally {
-        setInitialLoading(false);
-      }
-    }
-
-    if (pollId) {
-      fetchPoll();
-    }
-  }, [pollId, router]);
-
-  if (status === "loading" || initialLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2Icon className="w-8 h-8 animate-spin" />
-      </div>
-    );
-  }
-
-  if (status === "unauthenticated") {
-    return (
-      <div className="text-center py-8">
-        <p>Vous devez être connecté pour modifier un sondage.</p>
-      </div>
-    );
-  }
 
   function validatePoll(): boolean {
     const newErrors: ValidationErrors = {
@@ -86,7 +44,7 @@ export function EditPollWizard({ pollId }: EditPollWizardProps) {
     };
 
     if (!poll.name.trim()) {
-      newErrors.name = "Le nom du sondage est requis";
+      newErrors.name = "Le nom du Poll est requis";
     }
 
     poll.questions.forEach((question) => {
@@ -107,7 +65,7 @@ export function EditPollWizard({ pollId }: EditPollWizardProps) {
       }
 
       if (Object.keys(questionErrors).length > 0) {
-        newErrors.questions[question.id!] = questionErrors;
+        newErrors.questions[question._id.toString()] = questionErrors;
       }
     });
 
@@ -120,7 +78,7 @@ export function EditPollWizard({ pollId }: EditPollWizardProps) {
 
   function addQuestion() {
     const newQuestion: Question = {
-      id: generateId(),
+      _id: generateId(),
       title: "",
       type: QuestionType.Open,
       possibleAnswers: [],
@@ -135,7 +93,7 @@ export function EditPollWizard({ pollId }: EditPollWizardProps) {
   function removeQuestion(questionId: string) {
     setPoll((prev) => ({
       ...prev,
-      questions: prev.questions.filter((q) => q.id !== questionId),
+      questions: prev.questions.filter((q) => q._id !== questionId),
     }));
 
     setErrors((prev) => {
@@ -153,7 +111,7 @@ export function EditPollWizard({ pollId }: EditPollWizardProps) {
     setPoll((prev) => ({
       ...prev,
       questions: prev.questions.map((q) =>
-        q.id === questionId ? { ...q, [field]: value } : q
+        q._id === questionId ? { ...q, [field]: value } : q
       ),
     }));
 
@@ -178,7 +136,7 @@ export function EditPollWizard({ pollId }: EditPollWizardProps) {
     setPoll((prev) => ({
       ...prev,
       questions: prev.questions.map((q) =>
-        q.id === questionId
+        q._id === questionId
           ? {
               ...q,
               possibleAnswers: [...(q.possibleAnswers || []), ""],
@@ -196,7 +154,7 @@ export function EditPollWizard({ pollId }: EditPollWizardProps) {
     setPoll((prev) => ({
       ...prev,
       questions: prev.questions.map((q) =>
-        q.id === questionId
+        q._id === questionId
           ? {
               ...q,
               possibleAnswers: q.possibleAnswers?.map((r, i) =>
@@ -212,7 +170,7 @@ export function EditPollWizard({ pollId }: EditPollWizardProps) {
       if (newErrors.questions[questionId]) {
         const questionErrors = newErrors.questions[questionId];
         if (questionErrors.possibleAnswers) {
-          const question = poll.questions.find((q) => q.id === questionId);
+          const question = poll.questions.find((q) => q._id === questionId);
           if (
             question?.possibleAnswers &&
             question.possibleAnswers.length >= 2 &&
@@ -233,7 +191,7 @@ export function EditPollWizard({ pollId }: EditPollWizardProps) {
     setPoll((prev) => ({
       ...prev,
       questions: prev.questions.map((q) =>
-        q.id === questionId
+        q._id === questionId
           ? {
               ...q,
               possibleAnswers: q.possibleAnswers?.filter(
@@ -249,14 +207,14 @@ export function EditPollWizard({ pollId }: EditPollWizardProps) {
     if (validatePoll()) {
       try {
         setLoading(true);
-        const res = await fetch(`/api/poll/${pollId}`, {
+        const res = await fetch(`/api/poll/${poll._id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
             name: poll.name,
-            creator: session?.user?.id,
+            creator: pollProps.creator,
             questions: poll.questions,
           }),
         });
@@ -283,13 +241,13 @@ export function EditPollWizard({ pollId }: EditPollWizardProps) {
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label>Nom du sondage</Label>
+          <Label>Nom du Poll</Label>
           <Input
             value={poll.name}
             onChange={(e) =>
               setPoll((prev) => ({ ...prev, name: e.target.value }))
             }
-            placeholder="Entrez le nom du sondage"
+            placeholder="Entrez le nom du Poll"
             className={errors.name ? "border-red-500" : ""}
           />
           {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
@@ -298,7 +256,7 @@ export function EditPollWizard({ pollId }: EditPollWizardProps) {
         <div className="space-y-4">
           {poll.questions.map((question, index) => (
             <PollItem
-              key={question.id}
+              key={question._id.toString()}
               question={question}
               index={index}
               updateQuestion={updateQuestion}
@@ -306,7 +264,7 @@ export function EditPollWizard({ pollId }: EditPollWizardProps) {
               addPossibleAnswer={addPossibleAnswer}
               updatePossibleAnswer={updatePossibleAnswer}
               removePossibleAnswer={removePossibleAnswer}
-              errors={errors.questions[question.id!]}
+              errors={errors.questions[question._id.toString()]}
             />
           ))}
 
@@ -326,7 +284,7 @@ export function EditPollWizard({ pollId }: EditPollWizardProps) {
               Modification
             </Button>
           ) : (
-            <Button onClick={updatePoll}>Modifier le sondage</Button>
+            <Button onClick={updatePoll}>Modifier le Poll</Button>
           )}
         </div>
       </div>

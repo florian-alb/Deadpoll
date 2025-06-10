@@ -1,11 +1,12 @@
 import { auth } from "@/app/auth";
+import { User } from "@/app/types/users";
 import clientPromise, { dbName } from "@/lib//mongodb";
 import { collections } from "@/lib/collections";
 
 export async function getAuthUser() {
   const session = await auth();
 
-  if (!session?.user?.id) {
+  if (!session?.user) {
     return null;
   }
 
@@ -14,7 +15,7 @@ export async function getAuthUser() {
 
   const user = await db
     .collection(collections.users)
-    .findOne({ email: session.user.email });
+    .findOne<User>({ email: session.user.email });
 
   if (!user) {
     return null;

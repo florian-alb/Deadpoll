@@ -10,7 +10,7 @@ export type Poll = {
 };
 
 export type Question = {
-  id?: string;
+  _id: string | ObjectId;
   title: string;
   type: QuestionType;
   possibleAnswers: string[];

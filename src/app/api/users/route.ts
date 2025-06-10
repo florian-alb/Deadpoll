@@ -2,6 +2,7 @@ import { User } from "@/app/types/users";
 import { collections } from "@/lib/collections";
 import { ApiError } from "@/lib/api-error";
 import clientPromise, { dbName } from "@/lib/mongodb";
+import bcrypt from "bcryptjs";
 
 export async function GET(req: Request) {
   try {
@@ -28,10 +29,10 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const { email, name } = await req.json();
+    const { email, name, password } = await req.json();
 
-    if (!email || !name)
-      throw new ApiError("Email and/or Fullname are required", 400);
+    if (!email || !name || !password)
+      throw new ApiError("Email, Password and/or Fullname are required", 400);
 
     const client = await clientPromise;
     const db = client.db(dbName);
@@ -42,9 +43,14 @@ export async function POST(req: Request) {
 
     if (existingUser) throw new ApiError("user allready exitst", 400);
 
+    const passwordHash = await bcrypt.hash(password, 10);
+
     const newUser = {
-      email: email,
-      name: name,
+      email,
+      name,
+      passwordHash,
+      avatar: "",
+      createdAt: new Date(),
     };
 
     const result = db.collection(collections.users).insertOne(newUser);

@@ -3,7 +3,7 @@ import { collections } from "@/lib/collections";
 import { ApiError } from "@/lib/api-error";
 import clientPromise, { dbName } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
-import { getAuthUser } from "@/lib/get-auth-user";
+import { getAuthUser } from "@/lib/server/get-auth-user";
 
 export async function GET(req: Request) {
   try {
@@ -39,14 +39,15 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const user = await getAuthUser();
+
     if (!user) throw new ApiError("Unauthorized", 401);
 
     const client = await clientPromise;
     const db = client.db(dbName);
 
-    const { name, questions, creator } = await req.json();
+    const { name, questions } = await req.json();
 
-    if (!name || !Array.isArray(questions) || !creator)
+    if (!name || !Array.isArray(questions))
       throw new ApiError("Missing required fields", 400);
 
     const questionsWithId = questions.map((question: Question) => ({
@@ -61,7 +62,9 @@ export async function POST(req: Request) {
       created_at: new Date(),
     };
 
-    const result = await db.collection(collections.polls).insertOne(newPoll);
+    const result = await db
+      .collection<Poll>(collections.polls)
+      .insertOne(newPoll);
 
     return new Response(JSON.stringify(result), {
       status: 201,

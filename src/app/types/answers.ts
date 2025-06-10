@@ -1,10 +1,16 @@
+import { ObjectId } from "mongodb";
+
 export type Answer = {
-  pollId?: string;
-  userId?: string;
+  _id?: string | ObjectId;
+  pollId?: string | ObjectId;
+  userId?: string | ObjectId;
+  createdAt: Date;
   answers: QuestionAnswer[];
 };
 
-type QuestionAnswer = {
-  questionId?: string;
+export type QuestionAnswer = {
+  questionId: string;
   answer: string | string[];
 };
+
+export type AnswerWithUserEmail = Answer & { userEmail: string };

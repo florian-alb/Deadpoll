@@ -7,11 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { PollItem } from "@/components/poll/poll-item";
-import { Loader2Icon, Plus } from "lucide-react";
+import { ArrowLeft, Loader2Icon, Plus } from "lucide-react";
 import { Poll, Question, QuestionType } from "@/app/types/polls";
 import { generateId } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface ValidationErrors {
   name?: string;
@@ -30,7 +31,14 @@ export function CreatePollWizard() {
   const [poll, setPoll] = useState<Poll>({
     name: "",
     creator: session?.user?.id ?? "",
-    questions: [],
+    questions: [
+      {
+        _id: generateId(),
+        title: "",
+        type: QuestionType.Open,
+        possibleAnswers: [],
+      },
+    ],
   });
   const [errors, setErrors] = useState<ValidationErrors>({
     questions: {},
@@ -42,7 +50,7 @@ export function CreatePollWizard() {
     };
 
     if (!poll.name.trim()) {
-      newErrors.name = "Le nom du sondage est requis";
+      newErrors.name = "Le nom du Poll est requis";
     }
 
     poll.questions.forEach((question) => {
@@ -71,7 +79,7 @@ export function CreatePollWizard() {
       }
 
       if (Object.keys(questionErrors).length > 0) {
-        newErrors.questions[question.id!] = questionErrors;
+        newErrors.questions[question._id.toString()] = questionErrors;
       }
     });
 
@@ -84,7 +92,7 @@ export function CreatePollWizard() {
 
   function addQuestion() {
     const newQuestion: Question = {
-      id: generateId(),
+      _id: generateId(),
       title: "",
       type: QuestionType.Open,
       possibleAnswers: [],
@@ -98,7 +106,7 @@ export function CreatePollWizard() {
   function removeQuestion(questionId: string) {
     setPoll((prev) => ({
       ...prev,
-      questions: prev.questions.filter((q) => q.id !== questionId),
+      questions: prev.questions.filter((q) => q._id !== questionId),
     }));
 
     setErrors((prev) => {
@@ -116,7 +124,7 @@ export function CreatePollWizard() {
     setPoll((prev) => ({
       ...prev,
       questions: prev.questions.map((q) =>
-        q.id === questionId ? { ...q, [field]: value } : q
+        q._id === questionId ? { ...q, [field]: value } : q
       ),
     }));
 
@@ -141,7 +149,7 @@ export function CreatePollWizard() {
     setPoll((prev) => ({
       ...prev,
       questions: prev.questions.map((q) =>
-        q.id === questionId
+        q._id === questionId
           ? { ...q, possibleAnswers: [...(q.possibleAnswers || []), ""] }
           : q
       ),
@@ -156,7 +164,7 @@ export function CreatePollWizard() {
     setPoll((prev) => ({
       ...prev,
       questions: prev.questions.map((q) =>
-        q.id === questionId
+        q._id === questionId
           ? {
               ...q,
               possibleAnswers: q.possibleAnswers.map((r, i) =>
@@ -183,7 +191,7 @@ export function CreatePollWizard() {
     setPoll((prev) => ({
       ...prev,
       questions: prev.questions.map((q) =>
-        q.id === questionId
+        q._id === questionId
           ? {
               ...q,
               possibleAnswers: q.possibleAnswers.filter(
@@ -233,70 +241,70 @@ export function CreatePollWizard() {
   if (status === "unauthenticated") return <p>Non connecté</p>;
 
   return (
-    <div className="w-full h-full">
-      <Card className="shadow-none">
-        <CardHeader>
-          <CardTitle>Créer un nouveau sondage</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="pollName">Nom du sondage</Label>
-              <Input
-                id="pollName"
-                value={poll.name}
-                onChange={(e) => {
-                  setPoll({ ...poll, name: e.target.value });
-                  if (errors.name) {
-                    setErrors((prev) => ({ ...prev, name: undefined }));
-                  }
-                }}
-                placeholder="Entrez le nom du sondage"
-                className={errors.name ? "border-red-500" : ""}
-              />
-              {errors.name && (
-                <p className="text-sm text-red-500">{errors.name}</p>
-              )}
-            </div>
+    <div className="mx-auto">
+      <div className="flex justify-between align-center">
+        <h1 className="text-2xl font-bold mb-6">Créer un nouveau Poll</h1>
+        <Link href="/dashboard">
+          <Button variant="outline">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Retour
+          </Button>
+        </Link>
+      </div>
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <Label htmlFor="pollName">Nom du Poll</Label>
+          <Input
+            id="pollName"
+            value={poll.name}
+            onChange={(e) => {
+              setPoll({ ...poll, name: e.target.value });
+              if (errors.name) {
+                setErrors((prev) => ({ ...prev, name: undefined }));
+              }
+            }}
+            placeholder="Entrez le nom du Poll"
+            className={errors.name ? "border-red-500" : ""}
+          />
+          {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
+        </div>
 
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-medium">Questions</h3>
-                <Button onClick={addQuestion} size="sm">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Ajouter une question
-                </Button>
-              </div>
-
-              {poll.questions.map((question, index) => (
-                <PollItem
-                  key={question.id}
-                  question={question}
-                  index={index}
-                  updateQuestion={updateQuestion}
-                  removeQuestion={removeQuestion}
-                  addPossibleAnswer={addPossibleAnswer}
-                  updatePossibleAnswer={updatePossibleAnswer}
-                  removePossibleAnswer={removePossibleAnswer}
-                  errors={errors.questions[question.id!]}
-                />
-              ))}
-            </div>
-
-            <div className="flex justify-end space-x-2">
-              <Button variant="outline">Annuler</Button>
-              {loading ? (
-                <Button disabled>
-                  <Loader2Icon className="animate-spin" />
-                  Enregistrement
-                </Button>
-              ) : (
-                <Button onClick={savePoll}>Créer le sondage</Button>
-              )}
-            </div>
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-medium">Questions</h3>
+            <Button onClick={addQuestion} size="sm">
+              <Plus className="w-4 h-4 mr-2" />
+              Ajouter une question
+            </Button>
           </div>
-        </CardContent>
-      </Card>
+
+          {poll.questions.map((question, index) => (
+            <PollItem
+              key={question._id.toString()}
+              question={question}
+              index={index}
+              updateQuestion={updateQuestion}
+              removeQuestion={removeQuestion}
+              addPossibleAnswer={addPossibleAnswer}
+              updatePossibleAnswer={updatePossibleAnswer}
+              removePossibleAnswer={removePossibleAnswer}
+              errors={errors.questions[question._id.toString()]}
+            />
+          ))}
+        </div>
+
+        <div className="flex justify-end space-x-2">
+          <Button variant="outline">Annuler</Button>
+          {loading ? (
+            <Button disabled>
+              <Loader2Icon className="animate-spin" />
+              Enregistrement
+            </Button>
+          ) : (
+            <Button onClick={savePoll}>Créer le Poll</Button>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

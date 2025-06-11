@@ -5,7 +5,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { GalleryVerticalEnd } from "lucide-react";
 import { GithubSignIn } from "@/components/github-sign-in";
 import SignUpForm from "./sign-up-form";
 import LogoDeadpoll from "@/components/icons/logo-deadpoll";

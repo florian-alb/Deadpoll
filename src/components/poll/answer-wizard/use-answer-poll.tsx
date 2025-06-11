@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Poll } from "@/app/types/polls";
 
 export function useAnswerWizard(poll: Poll) {
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const router = useRouter();
 
   const total = poll.questions.length;
   const currentQuestion = poll.questions[current];

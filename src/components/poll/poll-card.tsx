@@ -4,7 +4,7 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
-import { Edit, ChartPie, Trash, Copy, icons } from "lucide-react";
+import { Edit, ChartPie, Trash, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,

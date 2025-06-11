@@ -4,6 +4,7 @@ import { usePoll } from "@/app/context/poll-context";
 import { AnswerWithUserEmail } from "@/app/types/answers";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 import { ArrowLeft, Download } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -24,8 +25,6 @@ export default function PollResponsesPage() {
   const poll = usePoll();
   const [answers, setAnswers] = useState<AnswerWithUserEmail[]>([]);
 
-  if (!poll) return notFound();
-
   useEffect(() => {
     async function fetchData() {
       const res = await fetch(`/api/poll/${poll?._id}/answer`);
@@ -33,7 +32,7 @@ export default function PollResponsesPage() {
       setAnswers([...answers]);
     }
     fetchData();
-  }, []);
+  }, [poll?._id]);
 
   const downloadCSV = () => {
     if (!answers.length) return;
@@ -75,6 +74,10 @@ export default function PollResponsesPage() {
     link.click();
     document.body.removeChild(link);
   };
+
+  if (poll === undefined) return <Spinner />;
+
+  if (!poll) return notFound();
 
   return (
     <div className="container mx-auto">

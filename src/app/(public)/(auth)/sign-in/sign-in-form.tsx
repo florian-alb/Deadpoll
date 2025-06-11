@@ -44,7 +44,7 @@ export default function SignInForm() {
       } else if (res?.ok && res?.url) {
         window.location.replace(res.url);
       }
-    } catch (err) {
+    } catch {
       toast.error(
         "Une erreur de réseau ou de client s'est produite. Veuillez réessayer."
       );

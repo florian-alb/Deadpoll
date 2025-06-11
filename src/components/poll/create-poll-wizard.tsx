@@ -4,7 +4,6 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { PollItem } from "@/components/poll/poll-item";
 import { ArrowLeft, Loader2Icon, Plus } from "lucide-react";
@@ -119,7 +118,7 @@ export function CreatePollWizard() {
   function updateQuestion(
     questionId: string,
     field: keyof Question,
-    value: any
+    value: string
   ) {
     setPoll((prev) => ({
       ...prev,

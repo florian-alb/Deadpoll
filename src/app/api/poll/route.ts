@@ -5,7 +5,7 @@ import clientPromise, { dbName } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { getAuthUser } from "@/lib/server/get-auth-user";
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const user = await getAuthUser();
     if (!user) throw new ApiError("Unauthorized", 401);

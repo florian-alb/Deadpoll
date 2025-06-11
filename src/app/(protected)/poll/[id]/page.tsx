@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useUser } from "@/app/context/poll-context copy";
-import { GithubSignIn } from "@/components/github-sign-in";
 import { LoginButton } from "@/components/auth-buttons";
 
 export default function AnswerPollPage() {
@@ -33,7 +32,9 @@ export default function AnswerPollPage() {
     return (
       <div className="container mx-auto py-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Vous n'etes pas connecté</h1>
+          <h1 className="text-2xl font-bold mb-4">
+            Vous n&apos;etes pas connecté
+          </h1>
           <p>Connectez vous pour répondre à ce Poll</p>
         </div>
         <LoginButton />

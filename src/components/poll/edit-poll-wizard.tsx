@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,8 +9,7 @@ import { Loader2Icon, Plus } from "lucide-react";
 import { Poll, Question, QuestionType } from "@/app/types/polls";
 import { generateId } from "@/lib/utils";
 import { toast } from "sonner";
-import { notFound, useRouter } from "next/navigation";
-import { usePoll } from "../../app/context/poll-context";
+import { useRouter } from "next/navigation";
 
 interface ValidationErrors {
   name?: string;
@@ -106,7 +104,7 @@ export function EditPollWizard({ pollProps }: EditPollWizardProps) {
   function updateQuestion(
     questionId: string,
     field: keyof Question,
-    value: any
+    value: string
   ) {
     setPoll((prev) => ({
       ...prev,

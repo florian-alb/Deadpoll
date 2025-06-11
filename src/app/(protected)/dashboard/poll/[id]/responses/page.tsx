@@ -36,6 +36,9 @@ export default function PollResponsesPage() {
 
   const downloadCSV = () => {
     if (!answers.length) return;
+
+    if (!poll) return;
+
     const headers = [
       "Date",
       "Utilisateur",

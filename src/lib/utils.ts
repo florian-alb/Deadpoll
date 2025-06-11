@@ -30,6 +30,7 @@ export function serializePoll(poll: Poll) {
     _id: poll._id?.toString(),
     creator: poll.creator?.toString?.() ?? null,
     modified_at: poll.modified_at?.toISOString?.() ?? null,
+    created_at: poll.created_at?.toISOString?.() ?? null,
     questions: poll.questions.map((q: Question) => ({
       ...q,
       _id: q._id?.toString?.() ?? undefined,

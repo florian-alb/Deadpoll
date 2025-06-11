@@ -17,7 +17,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { LogoutButton } from "@/components/auth-buttons";
+import { LogoutLink } from "@/components/auth-buttons";
 import { useSession } from "next-auth/react";
 
 export function NavUser() {
@@ -83,7 +83,7 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <LogoutButton />
+              <LogoutLink />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

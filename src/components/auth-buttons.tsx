@@ -9,12 +9,21 @@ export const LoginButton = () => {
   return (
     <Button onClick={() => signIn()}>
       <LogIn />
-      Login
+      Connection
     </Button>
   );
 };
 
-export function LogoutButton({
+export const LogoutButton = () => {
+  return (
+    <Button onClick={() => signOut()}>
+      <LogOut />
+      Déconnection
+    </Button>
+  );
+};
+
+export function LogoutLink({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -25,7 +34,7 @@ export function LogoutButton({
       {...props}
     >
       <LogOut />
-      Logout
+      Déconnection
     </div>
   );
 }

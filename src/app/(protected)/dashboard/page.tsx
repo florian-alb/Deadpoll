@@ -33,7 +33,7 @@ export default function DashboardPage() {
         `${window.location.origin}/poll/${pollId}`
       );
       toast.info("Lien du Poll copié");
-    } catch (err) {
+    } catch {
       toast.error("Erreur lors de la copie du lien");
     }
   }

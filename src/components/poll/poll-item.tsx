@@ -26,7 +26,7 @@ interface PollItemProps {
   updateQuestion: (
     questionId: string,
     field: keyof Question,
-    value: any
+    value: string
   ) => void;
   removeQuestion: (questionId: string) => void;
   addPossibleAnswer: (questionId: string) => void;

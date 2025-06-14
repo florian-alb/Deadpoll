@@ -1,12 +1,13 @@
 {
-  "name": "poll-app",
+  "name": "deadpoll",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "node scripts/seed.mjs"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.9.1",
@@ -24,6 +25,7 @@
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dotenv": "^16.5.0",
     "lucide-react": "^0.513.0",
     "mongodb": "^6.17.0",
     "next": "15.3.3",

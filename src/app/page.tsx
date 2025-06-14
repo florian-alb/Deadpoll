@@ -1,9 +1,14 @@
 import { auth } from "@/app/auth";
-import { LogoutButton } from "@/components/auth-buttons";
 import LogoDeadpoll from "@/components/icons/logo-deadpoll";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { LogIn, BarChart2, Users, MessageSquare } from "lucide-react";
+import {
+  LogIn,
+  BarChart2,
+  Users,
+  MessageSquare,
+  ChevronRight,
+} from "lucide-react";
 import Link from "next/link";
 
 export default async function Page() {
@@ -18,7 +23,12 @@ export default async function Page() {
             <h1 className="text-3xl font-bold">DeadPoll</h1>
           </div>
           {session?.user ? (
-            <LogoutButton />
+            <Link href="/dashboard">
+              <Button size="lg">
+                <ChevronRight className="w-5 h-5 mr-2" />
+                Tableau de bord
+              </Button>
+            </Link>
           ) : (
             <Link href="/sign-in">
               <Button size="lg">
@@ -85,7 +95,7 @@ export default async function Page() {
         </div>
 
         <div className="text-center text-sm text-muted-foreground">
-          <p>©{new Date().getFullYear()} PollApp. Tous droits réservés.</p>
+          <p>©{new Date().getFullYear()} DeadPoll. Tous droits réservés.</p>
         </div>
       </div>
     </div>

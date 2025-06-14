@@ -2,6 +2,30 @@
 
 # Création d'une application pour un Système de Sondage avec MongoDB
 
+## Démarrage rapide
+
+1. Installez les dépendances :
+   ```bash
+   pnpm install
+   ```
+2. Copiez le fichier `.env.local.example` vers `.env.local` et renseignez les variables.
+3. (Optionnel) Initialisez la base de données avec des données de test :
+   ```bash
+   pnpm run seed
+   ```
+4. Lancez le serveur de développement :
+   ```bash
+   pnpm dev
+   ```
+
+## Fonctionnalités
+
+- Authentification via NextAuth (connexion GitHub)
+- Création, modification et suppression de sondages
+- Ajout de questions de type QCM ou ouvertes
+- Réponse aux sondages et enregistrement dans MongoDB
+- Consultation de la liste des sondages
+
 ## Objectif
 
 L'objectif de cet exercice est de développer une application pour un système de sondage. L'application permettra la création de sondages, la gestion des questions, et la collecte des réponses. MongoDB servira de système de stockage pour les sondages et les réponses.

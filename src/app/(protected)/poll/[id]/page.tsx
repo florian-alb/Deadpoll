@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useUser } from "@/app/context/poll-context copy";
-import { LoginButton } from "@/components/auth-buttons";
+import { LoginButton, LogoutButton } from "@/components/auth-buttons";
 
 export default function AnswerPollPage() {
   const poll = usePoll();
@@ -52,12 +52,15 @@ export default function AnswerPollPage() {
           <p className="text-sm mb-4">
             Vous ne pouvez pas répondre à votre propre Poll
           </p>
-          <Link href="/dashboard">
-            <Button>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Retour au tableau de bord
-            </Button>
-          </Link>
+          <div className="flex gap-4 flex-col">
+            <Link href="/dashboard" className="w-full">
+              <Button className="w-full">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Retour au tableau de bord
+              </Button>
+            </Link>
+            <LogoutButton variant="outline" />
+          </div>
         </div>
       </div>
     );

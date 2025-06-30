@@ -25,20 +25,30 @@ export function formatDate(
 }
 
 export function serializePoll(poll: Poll) {
-  return {
-    ...poll,
-    _id: poll._id?.toString(),
-    creator: poll.creator?.toString?.() ?? null,
-    questions: poll.questions.map((q: Question) => ({
-      ...q,
-      _id: q._id?.toString?.() ?? undefined,
-    })),
-  };
+  return JSON.parse(
+    JSON.stringify({
+      ...poll,
+      _id: poll._id?.toString(),
+      creator: poll.creator?.toString?.() ?? null,
+      questions: poll.questions.map((q: Question) => ({
+        ...q,
+        _id: q._id?.toString?.() ?? undefined,
+      })),
+      created_at: poll.created_at
+        ? new Date(poll.created_at).toISOString()
+        : undefined,
+      modified_at: poll.modified_at
+        ? new Date(poll.modified_at).toISOString()
+        : undefined,
+    })
+  );
 }
 
 export function serializeUser(user: User) {
-  return {
-    ...user,
-    _id: user._id?.toString(),
-  };
+  return JSON.parse(
+    JSON.stringify({
+      ...user,
+      _id: user._id?.toString(),
+    })
+  );
 }

@@ -14,9 +14,15 @@ export const LoginButton = () => {
   );
 };
 
-export const LogoutButton = () => {
+export const LogoutButton = ({
+  className,
+  variant = "default",
+}: {
+  className?: string;
+  variant?: "outline" | "default" | "ghost" | "link" | "destructive";
+}) => {
   return (
-    <Button onClick={() => signOut()}>
+    <Button onClick={() => signOut()} className={className} variant={variant}>
       <LogOut />
       Déconnection
     </Button>

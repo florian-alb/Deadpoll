@@ -3,7 +3,7 @@ import { UserContextProvider } from "@/app/context/poll-context copy";
 import { getAuthUser } from "@/lib/server/get-auth-user";
 import { getPollById } from "@/lib/server/polls";
 import { serializePoll, serializeUser } from "@/lib/utils";
-import { notFound, unauthorized } from "next/navigation";
+import { notFound } from "next/navigation";
 
 export default async function PollLayout({
   children,
@@ -24,7 +24,9 @@ export default async function PollLayout({
 
   const user = await getAuthUser();
 
-  if (!user) unauthorized();
+  if (!user) {
+    return new Response("Unauthorized", { status: 401 });
+  }
 
   const safeUser = serializeUser(user);
   const safePoll = serializePoll(poll);

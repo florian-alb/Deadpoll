@@ -24,7 +24,9 @@ export default async function PollLayout({
 
   const user = await getAuthUser();
 
-  if (!user) unauthorized();
+  if (!user) {
+    return new Response("Unauthorized", { status: 401 });
+  }
 
   const safeUser = serializeUser(user);
   const safePoll = serializePoll(poll);
